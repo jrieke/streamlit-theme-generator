@@ -51,7 +51,7 @@ def apply_random_theme():
 
     config_dir = Path(".streamlit")
     config_dir.mkdir(parents=True, exist_ok=True)
-    with (config_dir / "config2.toml").open("w"):
+    with (config_dir / "config2.toml").open("w") as f:
         f.write(config)
 
     # TODO: Store these colors in session state or globally, so they don't get removed
