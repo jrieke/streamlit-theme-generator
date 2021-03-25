@@ -16,7 +16,7 @@ st.image(
 
 Click below to generate a new color theme, based on color palettes from 
 [colormind.io](http://colormind.io/). Note: This may not work properly if multiple 
-people use the app at the same time."
+people use the app at the same time.
 """
 
 def clamp(x):
