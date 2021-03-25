@@ -1,6 +1,7 @@
 import streamlit as st
 import numpy as np
 import requests
+from pathlib import Path
 
 
 # This code is the same for each deployed app.
@@ -8,6 +9,8 @@ st.image(
     "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/240/apple/271/woman-artist_1f469-200d-1f3a8.png",
     width=100,
 )
+
+CONFIG_FILENAME = Path(".streamlit/config.toml")
 
 """
 # Streamlit Theme Generator
@@ -48,7 +51,8 @@ def apply_random_theme():
     )
     print(config)
 
-    with open(".streamlit/config2.toml", "w") as f:
+    CONFIG_FILENAME.mkdir(parents=True, exist_ok=True)
+    with CONFIG_FILENAME.open("w"):
         f.write(config)
 
     # TODO: Store these colors in session state or globally, so they don't get removed
