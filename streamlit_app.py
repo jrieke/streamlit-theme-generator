@@ -11,10 +11,12 @@ st.image(
 
 """
 # Streamlit Theme Generator
+
+
+Click below to generate a new color theme, based on color palettes from 
+[colormind.io](http://colormind.io/). Note: This may not work properly if multiple 
+people use the app at the same time."
 """
-
-""
-
 
 def clamp(x):
     return max(0, min(x, 255))
@@ -64,6 +66,7 @@ def apply_random_theme():
 if st.button("New colors! 🎈"):
     apply_random_theme()
     st.info("Applying colors... (hit *Rerun* if asked)")
+
 
 if hasattr(st, "global_state"):
     rgb_colors = st.global_state["rgb_colors"]
