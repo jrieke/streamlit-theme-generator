@@ -48,7 +48,7 @@ def apply_random_theme():
     )
     print(config)
 
-    with open(".streamlit/config.toml", "w") as f:
+    with open(".streamlit/config2.toml", "w") as f:
         f.write(config)
 
     # TODO: Store these colors in session state or globally, so they don't get removed
