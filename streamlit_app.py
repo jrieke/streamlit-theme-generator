@@ -104,23 +104,25 @@ def apply_random_theme():
         # TODO: Refactor this.
         if locked[0]:
             if state.is_dark_theme:
-                input_list[4] = hex2rgb(state.backgroundColor)
+                input_list[4] = utils.hex2rgb(state.backgroundColor)
             else:
-                input_list[0] = hex2rgb(state.backgroundColor)
+                input_list[0] = utils.hex2rgb(state.backgroundColor)
         if locked[1]:
             if state.is_dark_theme:
-                input_list[3] = hex2rgb(state.secondaryBackgroundColor)
+                input_list[3] = utils.hex2rgb(state.secondaryBackgroundColor)
             else:
-                input_list[1] = hex2rgb(state.secondaryBackgroundColor)
+                input_list[1] = utils.hex2rgb(state.secondaryBackgroundColor)
         if locked[2]:
-            input_list[2] = hex2rgb(state.primaryColor)
+            input_list[2] = utils.hex2rgb(state.primaryColor)
         if locked[3]:
             if state.is_dark_theme:
-                input_list[0] = hex2rgb(state.textColor)
+                input_list[0] = utils.hex2rgb(state.textColor)
             else:
-                input_list[4] = hex2rgb(state.textColor)
+                input_list[4] = utils.hex2rgb(state.textColor)
         print(input_list)
-        res = requests.get("http://colormind.io/api/", json={"input": input_list, "model": "ui"})
+        res = requests.get(
+            "http://colormind.io/api/", json={"input": input_list, "model": "ui"}
+        )
         # "input":
     else:
         res = requests.get("http://colormind.io/api/", json={"model": "ui"})
