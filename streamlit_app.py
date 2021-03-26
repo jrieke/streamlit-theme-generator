@@ -82,10 +82,16 @@ def apply_random_theme():
     hex_colors = [rgb2hex(*rgb) for rgb in res.json()["result"]]
     # st.global_state = {"rgb_colors": rgb_colors, "hex_colors": hex_colors}
 
-    state.primaryColor = hex_colors[2]
-    state.backgroundColor = hex_colors[0]
-    state.secondaryBackgroundColor = hex_colors[1]
-    state.textColor = hex_colors[4]
+    if theme_type == "Light":
+        state.primaryColor = hex_colors[2]
+        state.backgroundColor = hex_colors[0]
+        state.secondaryBackgroundColor = hex_colors[1]
+        state.textColor = hex_colors[4]
+    else:
+        state.primaryColor = hex_colors[2]
+        state.backgroundColor = hex_colors[4]
+        state.secondaryBackgroundColor = hex_colors[3]
+        state.textColor = hex_colors[0]
 
     apply_theme_from_session_state()
     # st.experimental_rerun()
@@ -111,6 +117,8 @@ def apply_random_theme():
     #     # ax.imshow(image)
     #     # ax.axis("off")
 
+
+theme_type = st.radio("Which kind?", ["Light", "Dark"])
 
 if st.button("New colors! 🎈"):
     # print()
