@@ -20,34 +20,6 @@ Click below to generate a color palette and apply it to this app! 🎨 Powered b
 """
 
 
-def clamp(x):
-    return max(0, min(x, 255))
-
-
-def rgb2hex(r, g, b):
-    return "#{0:02x}{1:02x}{2:02x}".format(clamp(r), clamp(g), clamp(b))
-
-
-def hex2rgb(h):
-    return tuple(int(h.lstrip("#")[i : i + 2], 16) for i in (0, 2, 4))
-
-
-CONFIG_TEMPLATE = """
-[theme]
-primaryColor = "{}"
-backgroundColor = "{}"
-secondaryBackgroundColor = "{}"
-textColor = "{}"
-font = "sans serif"
-"""
-
-# state = SessionState.get(
-#     primaryColor="#f63366",
-#     backgroundColor="#FFFFFF",
-#     secondaryBackgroundColor="#f0f2f6",
-#     textColor="#262730",
-# )
-
 state = st.get_state(
     primaryColor="#f63366",
     backgroundColor="#FFFFFF",
@@ -72,6 +44,11 @@ for column, label in zip(columns, labels):
     # TODO: Do this with st.checkbox, but doesn't return the proper value with current wheel.
     lock_value = column.radio("", ["Locked", "Unlocked"], index=1, key="lock-" + label)
     locked.append(lock_value == "Locked")
+    column.color_picker(
+        label.rstrip("Color").replace("B", " b").capitalize(),
+        state[label],
+        key="color_picker" + label,
+    )
     # ax.imshow(image)
     # ax.axis("off")
 # st.write(locked)
@@ -128,7 +105,7 @@ def apply_random_theme():
         res = requests.get("http://colormind.io/api/", json={"model": "ui"})
 
     rgb_colors = res.json()["result"]
-    hex_colors = [rgb2hex(*rgb) for rgb in res.json()["result"]]
+    hex_colors = [utils.rgb2hex(*rgb) for rgb in res.json()["result"]]
     # st.global_state = {"rgb_colors": rgb_colors, "hex_colors": hex_colors}
 
     state.rgb_palette = rgb_colors
@@ -194,7 +171,7 @@ else:
 st.write("---")
 
 
-config = CONFIG_TEMPLATE.format(
+config = utils.CONFIG_TEMPLATE.format(
     state.primaryColor,
     state.backgroundColor,
     state.secondaryBackgroundColor,
