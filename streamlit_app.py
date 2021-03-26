@@ -1,5 +1,6 @@
 import requests
 from pathlib import Path
+import random
 import streamlit as st
 import numpy as np
 from PIL import Image, ImageOps
@@ -18,7 +19,7 @@ st.image(
 Click below to generate a color palette and apply it to this app! 🎨 Powered by [colormind.io](http://colormind.io/bootstrap/)
 """
 
-# Init state. This is only run whenever a new session starts (i.e. each time a new 
+# Init state. This is only run whenever a new session starts (i.e. each time a new
 # browser tab is opened).
 state = st.get_state(
     primaryColor="#f63366",
@@ -36,46 +37,41 @@ labels = ["backgroundColor", "secondaryBackgroundColor", "primaryColor", "textCo
 for column, label in zip(columns, labels):
     img = Image.new("RGB", (100, 50), state[label])
     img = ImageOps.expand(img, border=1, fill="black")
-    # image = np.zeros((150, 300, 3), np.uint8)
-    # image[3:-3, 3:-3] = color
     column.image(img, width=150)
     column.markdown(f"<sup>{label}<br>{state[label]}</sup>", unsafe_allow_html=True)
     # TODO: Do this with st.checkbox, but doesn't return the proper value with current wheel.
     lock_value = column.radio("", ["Locked", "Unlocked"], index=1, key="lock-" + label)
     locked.append(lock_value == "Locked")
-    column.color_picker(
-        label.rstrip("Color").replace("B", " b").capitalize(),
-        state[label],
-        key="color_picker" + label,
-    )
-    # ax.imshow(image)
-    # ax.axis("off")
-# st.write(locked)
-
-# tab = st.text_input("Which tab is this?")
-# st.write(tab)
-# print(tab, state.primaryColor)
+    # TODO: Show colorpicker above instead of images.
+    # column.color_picker(
+    #     label.rstrip("Color").replace("B", " b").capitalize(),
+    #     state[label],
+    #     key="color_picker" + label,
+    # )
 
 
 def apply_theme_from_session_state():
-    # print(tab, " - config primary:", st.config.get_option("theme.primaryColor"))
-    # print(tab, " - state primary: ", state.primaryColor)
+    """Retrieve theme from session state and apply it to streamlit config."""
+    # Only apply if theme in state differs from the current config. This is important
+    # to not trigger rerun repeatedly.
     if st.config.get_option("theme.primaryColor") != state.primaryColor:
-        # print(tab, " - DIFFERENCE, APPLYING THEME NOW")
         st.config.set_option("theme.primaryColor", state.primaryColor)
         st.config.set_option("theme.backgroundColor", state.backgroundColor)
         st.config.set_option(
             "theme.secondaryBackgroundColor", state.secondaryBackgroundColor
         )
         st.config.set_option("theme.textColor", state.textColor)
+
+        # Trigger manual rerun (required to actually apply the theme to the app).
         st.experimental_rerun()
-    else:
-        # print(tab, " - no difference, did not apply theme")
-        pass
 
 
-def apply_random_theme():
+def generate_new_theme():
+    """Retrieve new theme from colormind, store in state, and apply to app."""
     if any(locked):
+        # Generate only new colors for the colors that are not locked. These need to be
+        # represented as "N" in the list below. Locked colors need to be represented by
+        # their RGB values, e.g. [123, 123, 123].
         input_list = ["N", "N", "N", "N", "N"]
         # TODO: Refactor this.
         if locked[0]:
@@ -95,19 +91,21 @@ def apply_random_theme():
                 input_list[0] = utils.hex2rgb(state.textColor)
             else:
                 input_list[4] = utils.hex2rgb(state.textColor)
-        print(input_list)
         res = requests.get(
             "http://colormind.io/api/", json={"input": input_list, "model": "ui"}
         )
-        # "input":
     else:
+        # Generate new colors for all colors.
         res = requests.get("http://colormind.io/api/", json={"model": "ui"})
 
+    # Retrieve results from colormind.io and convert to hex.
     rgb_colors = res.json()["result"]
     hex_colors = [utils.rgb2hex(*rgb) for rgb in res.json()["result"]]
-    # st.global_state = {"rgb_colors": rgb_colors, "hex_colors": hex_colors}
 
-    state.rgb_palette = rgb_colors
+    # TODO: Refactor this with the stuff above.
+    # Store colors in session state. This is required so that separate tabs/users can
+    # have different themes. If we would apply the theme directly to `st.config`,
+    # every user would see the same theme!
     if theme_type == "Light":
         state.primaryColor = hex_colors[2]
         state.backgroundColor = hex_colors[0]
@@ -121,63 +119,37 @@ def apply_random_theme():
         state.textColor = hex_colors[0]
         state.is_dark_theme = True
 
-    apply_theme_from_session_state()
-    # st.experimental_rerun()
 
-    # config = CONFIG_TEMPLATE.format(
-    #     hex_colors[3], hex_colors[0], hex_colors[1], hex_colors[4]
-    # )
-    # print(config)
-
-    # config_dir = Path(".streamlit")
-    # config_dir.mkdir(parents=True, exist_ok=True)
-    # with (config_dir / "config.toml").open("w") as f:
-    #     f.write(config)
-
-    # TODO: Store these colors in session state or globally, so they don't get removed
-    #   as soon as streamlit re-runs due to the changing config.
-    # fig, axes = plt.subplots(1, 5)
-    # columns = st.beta_columns(5)
-    # for column, color in zip(columns, rgb_colors):
-    #     image = np.zeros((300, 300, 3), np.uint8)
-    #     image[:] = color
-    #     column.image(image)
-    #     # ax.imshow(image)
-    #     # ax.axis("off")
-
-
+# TODO: Display the radio buttons here differently.
 theme_type = st.radio("Which kind?", ["Light", "Dark"])
 
-if st.button("🔄 New colors! 🎈"):
-    # print()
-    # print(tab, " - button pressed :)")
+if st.button("🔄 Generate new theme"):
     if state.first_time:
+        # Show some 🎈 🎈 the first time the user creates a new theme ;)
         st.balloons()
         state.first_time = False
-    apply_random_theme()
-    st.info("Applying colors... (hit *Rerun* if asked)")
-else:
-    # print()
-    apply_theme_from_session_state()
+    wait_texts = [
+        "🎨 Mixing colors...",
+        "🌈 Collecting rainbows...",
+        "🖌️ Painting...",
+        "🐿️ Making happy little accidents...",
+        "🌲 Decision time...",
+        "☀️ Lighting up...",
+    ]
+    st.info(random.choice(wait_texts))
+    generate_new_theme()
 
-
-# st.markdown(
-#     "<sub>Note: May not work properly if a lot of people use this app at the same time!</sub>",
-#     unsafe_allow_html=True,
-# )
+apply_theme_from_session_state()
 
 
 st.write("---")
-
-
+st.write("To use them in your app, just add this code to `.streamlit/config.toml`:")
 config = utils.CONFIG_TEMPLATE.format(
     state.primaryColor,
     state.backgroundColor,
     state.secondaryBackgroundColor,
     state.textColor,
 )
-st.write("")
-st.write("To use them in your app, just add this code to `.streamlit/config.toml`:")
 st.code(config)
 st.write("---")
 
