@@ -1,13 +1,12 @@
-import streamlit as st
-import numpy as np
 import requests
 from pathlib import Path
+import streamlit as st
+import numpy as np
 from PIL import Image, ImageOps
 
-# import SessionState
+import utils
 
-
-# This code is the same for each deployed app.
+# Show header.
 st.image(
     "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/240/apple/271/woman-artist_1f469-200d-1f3a8.png",
     width=100,
@@ -19,7 +18,8 @@ st.image(
 Click below to generate a color palette and apply it to this app! 🎨 Powered by [colormind.io](http://colormind.io/bootstrap/)
 """
 
-
+# Init state. This is only run whenever a new session starts (i.e. each time a new 
+# browser tab is opened).
 state = st.get_state(
     primaryColor="#f63366",
     backgroundColor="#FFFFFF",
@@ -29,9 +29,8 @@ state = st.get_state(
     first_time=True,
 )
 
+# Show current theme colors.
 locked = []
-
-st.write("Current theme:")
 columns = st.beta_columns(4)
 labels = ["backgroundColor", "secondaryBackgroundColor", "primaryColor", "textColor"]
 for column, label in zip(columns, labels):
