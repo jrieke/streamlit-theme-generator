@@ -7,7 +7,7 @@
 [Theming in Streamlit](https://blog.streamlit.io/introducing-theming/) is awesome but
 it's often hard to pick colors that match. This app generates beautiful color
 palettes through [colormind.io](http://colormind.io/bootstrap/)
-and applies them live to it's Streamlit theme. Just generate themes until you
+and applies them live to its Streamlit theme. Just generate themes until you
 find one you like and copy it to your own Streamlit app!
 
 <br>
