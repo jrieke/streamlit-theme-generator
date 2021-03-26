@@ -49,6 +49,7 @@ state = st.get_state(
     backgroundColor="#FFFFFF",
     secondaryBackgroundColor="#f0f2f6",
     textColor="#262730",
+    first_time=True,
 )
 
 
@@ -114,6 +115,9 @@ def apply_random_theme():
 if st.button("New colors! 🎈"):
     # print()
     # print(tab, " - button pressed :)")
+    if state.first_time:
+        st.balloons()
+        state.first_time = False
     apply_random_theme()
     st.info("Applying colors... (hit *Rerun* if asked)")
 else:
