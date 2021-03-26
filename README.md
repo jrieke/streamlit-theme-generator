@@ -15,13 +15,13 @@ find one you like and copy it to your own Streamlit app!
 ---
 
 <h3 align="center">
-    🌈 <a href="https://share.streamlit.io/jrieke/streamlit-theme-generator/main">Try it out</a> 🌈
+    🌈 <a href="https://share.streamlit.io/jrieke/streamlit-theme-generator/main">Start coloring</a> 🌈
 </h3>
 
 ---
 
 <p align="center">
-    <a href="https://share.streamlit.io/jrieke/streamlit-theme-generator/main"><img src="images/demo.gif" width=700></a>
+    <a href="https://share.streamlit.io/jrieke/streamlit-theme-generator/main"><img src="images/demo.png" width=700></a>
 </p>
 
 <br>
