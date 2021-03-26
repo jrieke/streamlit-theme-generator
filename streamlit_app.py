@@ -10,18 +10,6 @@ import utils
 
 utils.local_css("local_styles.css")
 
-# Show header.
-st.image(
-    "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/240/apple/271/woman-artist_1f469-200d-1f3a8.png",
-    width=100,
-)
-
-"""
-# Streamlit Theme Generator
-
-Click below to generate a color palette and apply it to this app! 🎨 Powered by [colormind.io](http://colormind.io/bootstrap/)
-"""
-
 # Init state. This is only run whenever a new session starts (i.e. each time a new
 # browser tab is opened).
 state = st.get_state(
@@ -32,6 +20,35 @@ state = st.get_state(
     is_dark_theme=False,
     first_time=True,
 )
+
+
+# Show header.
+st.image(
+    "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/240/apple/271/woman-artist_1f469-200d-1f3a8.png",
+    width=100,
+)
+
+"""
+# Streamlit Theme Generator
+
+Generate beautiful color themes for Streamlit, powered by [colormind.io](http://colormind.io/bootstrap/). 
+Scroll down to see the theme in action 🎈
+"""
+
+""
+
+col1, col2 = st.beta_columns([0.3, 0.7])
+new_theme_clicked = col1.button("🔄 Generate new theme")
+theme_type = col2.radio("", ["Light theme", "Dark theme"])
+# spinner = st.empty()
+# if not state.first_time:
+#     ""
+#     "Done! Scroll down to see your new theme 🎈 "
+# TODO: Use a checkbox here instead. Doesn't work with current wheel file.
+# dark_checked = st.checkbox("Use dark themes")  # "Black is beautiful" or "Make it dark"
+
+"---"
+
 
 # Show current theme colors.
 locked = []
@@ -45,13 +62,13 @@ for column, label in zip(columns, labels):
     # )
     # st.write(c)
     # st.text_input("c", state[label], key="test" + label)
+    img = Image.new("RGB", (100, 50), state[label])
+    img = ImageOps.expand(img, border=1, fill="black")
+    column.image(img, width=150)
     column.markdown(
         f"<small>{label.rstrip('Color').replace('B', ' b').capitalize()}</small>",
         unsafe_allow_html=True,
     )
-    img = Image.new("RGB", (100, 50), state[label])
-    img = ImageOps.expand(img, border=1, fill="black")
-    column.image(img, width=150)
     # TODO: Do this with st.checkbox, but doesn't return the proper value with current wheel.
     lock_value = column.radio("", ["Locked", "Unlocked"], index=1, key="lock-" + label)
     locked.append(lock_value == "Locked")
@@ -128,13 +145,8 @@ def generate_new_theme():
         state.is_dark_theme = True
 
 
-# TODO: Display the radio buttons here differently.
 ""
-col1, col2 = st.beta_columns([0.3, 0.7])
-new_theme_clicked = col1.button("🔄 Generate new theme")
-theme_type = col2.radio("", ["Light theme", "Dark theme"])
-# TODO: Use a checkbox here instead. Doesn't work with current wheel file.
-# dark_checked = st.checkbox("Use dark themes")  # "Black is beautiful"
+
 
 if new_theme_clicked:
     if state.first_time:
@@ -149,15 +161,18 @@ if new_theme_clicked:
         "🌲 Decision time...",
         "☀️ Lighting up...",
     ]
-    st.info(random.choice(wait_texts))
+    # spinner.info(random.choice(wait_texts))
     generate_new_theme()
 
 # TODO: Try to do everything after this call, because this triggers a re-run.
 apply_theme_from_session_state()
 
 
-st.write("---")
-st.write("To use them in your app, just add this code to `.streamlit/config.toml`:")
+# st.write("---")
+""
+st.write(
+    "To use this theme in your app, just copy the following code to `.streamlit/config.toml`:"
+)
 config = utils.CONFIG_TEMPLATE.format(
     state.primaryColor,
     state.backgroundColor,
