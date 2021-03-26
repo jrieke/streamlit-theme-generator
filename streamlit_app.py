@@ -17,7 +17,7 @@ st.image(
 # Streamlit Theme Generator
 
 
-Click below to apply a random color palette from [colormind.io](http://colormind.io/) 
+Click below to apply a random color palette from [colormind.io](http://colormind.io/bootstrap/) 
 to this app! 🎨 
 """
 
