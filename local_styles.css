@@ -1,9 +1,12 @@
 [data-testid="stColorPicker"] > div > div {
-  /* background-color: yellow; */
   width: 8.5rem;
   height: 4rem;
 }
 
 [data-testid="stColorPicker"] > div {
   height: 4rem;
+}
+
+.main * div.row-widget.stRadio > div {
+  flex-direction: row;
 }

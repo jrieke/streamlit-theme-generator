@@ -114,7 +114,7 @@ def generate_new_theme():
     # Store colors in session state. This is required so that separate tabs/users can
     # have different themes. If we would apply the theme directly to `st.config`,
     # every user would see the same theme!
-    if theme_type == "Light":
+    if theme_type == "Light theme":
         state.primaryColor = hex_colors[2]
         state.backgroundColor = hex_colors[0]
         state.secondaryBackgroundColor = hex_colors[1]
@@ -129,9 +129,14 @@ def generate_new_theme():
 
 
 # TODO: Display the radio buttons here differently.
-theme_type = st.radio("Which kind?", ["Light", "Dark"])
+""
+col1, col2 = st.beta_columns([0.3, 0.7])
+new_theme_clicked = col1.button("🔄 Generate new theme")
+theme_type = col2.radio("", ["Light theme", "Dark theme"])
+# TODO: Use a checkbox here instead. Doesn't work with current wheel file.
+# dark_checked = st.checkbox("Use dark themes")  # "Black is beautiful"
 
-if st.button("🔄 Generate new theme"):
+if new_theme_clicked:
     if state.first_time:
         # Show some 🎈 🎈 the first time the user creates a new theme ;)
         st.balloons()
