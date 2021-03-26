@@ -8,6 +8,11 @@ from PIL import Image, ImageOps
 import utils
 
 
+st.set_page_config(
+    "Streamlit Theme Generator",
+    "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/240/apple/271/woman-artist_1f469-200d-1f3a8.png",
+)
+
 utils.local_css("local_styles.css")
 
 # Init state. This is only run whenever a new session starts (i.e. each time a new
