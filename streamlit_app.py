@@ -55,8 +55,8 @@ state = st.get_state(
 )
 
 
-tab = st.text_input("Which tab is this?")
-st.write(tab)
+# tab = st.text_input("Which tab is this?")
+# st.write(tab)
 # print(tab, state.primaryColor)
 
 
@@ -170,13 +170,13 @@ def draw_all(
         """
     )
 
-    st.checkbox("Is this cool or what?", key=key)
+    st.checkbox("Is this cool or what?", key=key + "check")
     st.radio(
         "How many balloons?",
         ["1 balloon 🎈", "2 balloons 🎈🎈", "3 balloons 🎈🎈🎈"],
-        key=key,
+        key=key + "radio",
     )
-    st.button("🤡 Click me", key=key)
+    st.button("🤡 Click me", key=key + "button")
 
     # if plot:
     #     st.write("Oh look, a plot:")
@@ -191,17 +191,20 @@ def draw_all(
 
     #     st.plotly_chart(fig, use_container_width=True)
 
-    st.file_uploader("You can now upload with style", key=key)
+    # st.file_uploader("You can now upload with style", key=key + "file_uploader")
     st.slider(
-        "From 10 to 11, how cool are themes?", min_value=10, max_value=11, key=key
+        "From 10 to 11, how cool are themes?",
+        min_value=10,
+        max_value=11,
+        key=key + "slider",
     )
     # st.select_slider("Pick a number", [1, 2, 3], key=key)
-    st.number_input("So many numbers", key=key)
-    st.text_area("A little writing space for you :)", key=key)
+    st.number_input("So many numbers", key=key + "number")
+    # st.text_area("A little writing space for you :)", key=key + "text")
     st.selectbox(
         "My favorite thing in the world is...",
         ["Streamlit", "Theming", "Baloooons 🎈 "],
-        key=key,
+        key=key + "select",
     )
     # st.multiselect("Pick a number", [1, 2, 3], key=key)
     # st.color_picker("Colors, colors, colors", key=key)
