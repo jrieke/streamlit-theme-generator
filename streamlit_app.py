@@ -2,7 +2,9 @@ import streamlit as st
 import numpy as np
 import requests
 from pathlib import Path
-import SessionState
+from PIL import Image, ImageOps
+
+# import SessionState
 
 
 # This code is the same for each deployed app.
@@ -38,20 +40,27 @@ textColor = "{}"
 font = "sans serif"
 """
 
-state = SessionState.get(
+# state = SessionState.get(
+#     primaryColor="#f63366",
+#     backgroundColor="#FFFFFF",
+#     secondaryBackgroundColor="#f0f2f6",
+#     textColor="#262730",
+# )
+
+state = st.get_state(
     primaryColor="#f63366",
     backgroundColor="#FFFFFF",
     secondaryBackgroundColor="#f0f2f6",
     textColor="#262730",
 )
 
-# print(state)
 
 tab = st.text_input("Which tab is this?")
+st.write(tab)
+# print(tab, state.primaryColor)
 
 
 def apply_theme_from_session_state():
-    # st.config.set_option("theme.font", "sans serif")
     print(tab, " - config primary:", st.config.get_option("theme.primaryColor"))
     print(tab, " - state primary: ", state.primaryColor)
     if st.config.get_option("theme.primaryColor") != state.primaryColor:
@@ -65,8 +74,7 @@ def apply_theme_from_session_state():
         st.experimental_rerun()
     else:
         print(tab, " - no difference, did not apply theme")
-
-
+        pass
 
 
 def apply_random_theme():
@@ -74,7 +82,7 @@ def apply_random_theme():
 
     rgb_colors = res.json()["result"]
     hex_colors = [rgb2hex(*rgb) for rgb in res.json()["result"]]
-    st.global_state = {"rgb_colors": rgb_colors, "hex_colors": hex_colors}
+    # st.global_state = {"rgb_colors": rgb_colors, "hex_colors": hex_colors}
 
     state.primaryColor = hex_colors[3]
     state.backgroundColor = hex_colors[0]
@@ -82,7 +90,7 @@ def apply_random_theme():
     state.textColor = hex_colors[4]
 
     apply_theme_from_session_state()
-    #st.experimental_rerun()
+    # st.experimental_rerun()
 
     # config = CONFIG_TEMPLATE.format(
     #     hex_colors[3], hex_colors[0], hex_colors[1], hex_colors[4]
@@ -116,30 +124,30 @@ else:
     apply_theme_from_session_state()
 
 
-if hasattr(st, "global_state"):
-    rgb_colors = st.global_state["rgb_colors"]
-    hex_colors = st.global_state["hex_colors"]
+st.write("---")
+st.write("Here are your current colors:")
+columns = st.beta_columns(4)
+labels = ["backgroundColor", "secondaryBackgroundColor", "primaryColor", "textColor"]
+for column, label in zip(columns, labels):
+    webhexcolor = "#4878A8"
+    img = Image.new("RGB", (100, 50), state[label])
+    img = ImageOps.expand(img, border=1, fill="black")
+    # image = np.zeros((150, 300, 3), np.uint8)
+    # image[3:-3, 3:-3] = color
+    column.image(img, width=150)
+    column.write(label)
+    # ax.imshow(image)
+    # ax.axis("off")
 
-    st.write("---")
-    st.write("Here are your new colors:")
-    columns = st.beta_columns(4)
-    labels = ["Background", "2nd Background", "Primary", "Text"]
-    for column, color, label in zip(
-        columns, np.array(rgb_colors)[[0, 1, 3, 4]], labels
-    ):
-        image = np.zeros((150, 300, 3), np.uint8)
-        image[3:-3, 3:-3] = color
-        column.image(image, width=150)
-        column.write(label)
-        # ax.imshow(image)
-        # ax.axis("off")
-
-    config = CONFIG_TEMPLATE.format(
-        hex_colors[3], hex_colors[0], hex_colors[1], hex_colors[4]
-    )
-    st.write("")
-    st.write("And this is the config for them (put in `.streamlit/config.toml`):")
-    st.code(config)
+config = CONFIG_TEMPLATE.format(
+    state.primaryColor,
+    state.backgroundColor,
+    state.secondaryBackgroundColor,
+    state.textColor,
+)
+st.write("")
+st.write("And this is the config for them (put in `.streamlit/config.toml`):")
+st.code(config)
 
 
 # Draw some dummy content in main page and sidebar.

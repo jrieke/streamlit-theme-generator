@@ -4,7 +4,8 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-streamlit = "*"
+streamlit = {path = "./streamlit-0.79.0-py2.py3-none-any.whl"}
+pillow = "*"
 
 [dev-packages]
 

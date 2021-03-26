@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "8a9121d6b0d727f0ab6946a2261c90e4314a7cd59c2cfe507cac2166b3af6f86"
+            "sha256": "9ab010e98e668243508b7ebc2dcce0eb6441dd63db63e9f310eb062f88f2526b"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -542,7 +542,7 @@
                 "sha256:f36c3ff63d6fc509ce599a2f5b0d0732189eed653420e7294c039d342c6e204a",
                 "sha256:f91b50ad88048d795c0ad004abbe1390aa1882073b1dca10bfd55d0b8cf18ec5"
             ],
-            "markers": "python_version >= '3.6'",
+            "index": "pypi",
             "version": "==8.1.2"
         },
         "prometheus-client": {
@@ -745,9 +745,10 @@
         "streamlit": {
             "hashes": [
                 "sha256:35c2c901b5fee15174a0cc03e465e9b13a10f8f411d925c2ca9dd012bdc8ab20",
-                "sha256:8532aad5a05af08dd48e955fa64bc9fe9e3fb99a4c95514215a597ba56e05121"
+                "sha256:8532aad5a05af08dd48e955fa64bc9fe9e3fb99a4c95514215a597ba56e05121",
+                "sha256:a66e73d6821108d1b208695ed5e7f416576c3976fdb05995bcae3a33aa061399"
             ],
-            "index": "pypi",
+            "path": "./streamlit-0.79.0-py2.py3-none-any.whl",
             "version": "==0.79.0"
         },
         "terminado": {
