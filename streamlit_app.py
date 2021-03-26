@@ -2,6 +2,7 @@ import streamlit as st
 import numpy as np
 import requests
 from pathlib import Path
+import SessionState
 
 
 # This code is the same for each deployed app.
@@ -18,6 +19,7 @@ Click below to generate a new color theme, based on color palettes from
 [colormind.io](http://colormind.io/). Note: This may not work properly if multiple 
 people use the app at the same time.
 """
+
 
 def clamp(x):
     return max(0, min(x, 255))
@@ -36,6 +38,36 @@ textColor = "{}"
 font = "sans serif"
 """
 
+state = SessionState.get(
+    primaryColor="#f63366",
+    backgroundColor="#FFFFFF",
+    secondaryBackgroundColor="#f0f2f6",
+    textColor="#262730",
+)
+
+# print(state)
+
+tab = st.text_input("Which tab is this?")
+
+
+def apply_theme_from_session_state():
+    # st.config.set_option("theme.font", "sans serif")
+    print(tab, " - config primary:", st.config.get_option("theme.primaryColor"))
+    print(tab, " - state primary: ", state.primaryColor)
+    if st.config.get_option("theme.primaryColor") != state.primaryColor:
+        print(tab, " - DIFFERENCE, APPLYING THEME NOW")
+        st.config.set_option("theme.primaryColor", state.primaryColor)
+        st.config.set_option("theme.backgroundColor", state.backgroundColor)
+        st.config.set_option(
+            "theme.secondaryBackgroundColor", state.secondaryBackgroundColor
+        )
+        st.config.set_option("theme.textColor", state.textColor)
+        st.experimental_rerun()
+    else:
+        print(tab, " - no difference, did not apply theme")
+
+
+
 
 def apply_random_theme():
     res = requests.get("http://colormind.io/api/", json={"model": "ui"})
@@ -44,15 +76,23 @@ def apply_random_theme():
     hex_colors = [rgb2hex(*rgb) for rgb in res.json()["result"]]
     st.global_state = {"rgb_colors": rgb_colors, "hex_colors": hex_colors}
 
-    config = CONFIG_TEMPLATE.format(
-        hex_colors[3], hex_colors[0], hex_colors[1], hex_colors[4]
-    )
-    print(config)
+    state.primaryColor = hex_colors[3]
+    state.backgroundColor = hex_colors[0]
+    state.secondaryBackgroundColor = hex_colors[1]
+    state.textColor = hex_colors[4]
 
-    config_dir = Path(".streamlit")
-    config_dir.mkdir(parents=True, exist_ok=True)
-    with (config_dir / "config.toml").open("w") as f:
-        f.write(config)
+    apply_theme_from_session_state()
+    #st.experimental_rerun()
+
+    # config = CONFIG_TEMPLATE.format(
+    #     hex_colors[3], hex_colors[0], hex_colors[1], hex_colors[4]
+    # )
+    # print(config)
+
+    # config_dir = Path(".streamlit")
+    # config_dir.mkdir(parents=True, exist_ok=True)
+    # with (config_dir / "config.toml").open("w") as f:
+    #     f.write(config)
 
     # TODO: Store these colors in session state or globally, so they don't get removed
     #   as soon as streamlit re-runs due to the changing config.
@@ -67,8 +107,13 @@ def apply_random_theme():
 
 
 if st.button("New colors! 🎈"):
+    print()
+    print(tab, " - button pressed :)")
     apply_random_theme()
     st.info("Applying colors... (hit *Rerun* if asked)")
+else:
+    print()
+    apply_theme_from_session_state()
 
 
 if hasattr(st, "global_state"):
