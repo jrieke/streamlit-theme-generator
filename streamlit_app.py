@@ -7,6 +7,9 @@ from PIL import Image, ImageOps
 
 import utils
 
+
+utils.local_css("local_styles.css")
+
 # Show header.
 st.image(
     "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/240/apple/271/woman-artist_1f469-200d-1f3a8.png",
@@ -35,19 +38,24 @@ locked = []
 columns = st.beta_columns(4)
 labels = ["backgroundColor", "secondaryBackgroundColor", "primaryColor", "textColor"]
 for column, label in zip(columns, labels):
-    img = Image.new("RGB", (100, 50), state[label])
-    img = ImageOps.expand(img, border=1, fill="black")
-    column.image(img, width=150)
-    column.markdown(f"<sup>{label}<br>{state[label]}</sup>", unsafe_allow_html=True)
-    # TODO: Do this with st.checkbox, but doesn't return the proper value with current wheel.
-    lock_value = column.radio("", ["Locked", "Unlocked"], index=1, key="lock-" + label)
-    locked.append(lock_value == "Locked")
-    # TODO: Show colorpicker above instead of images.
-    # column.color_picker(
+    # c = column.color_picker(
     #     label.rstrip("Color").replace("B", " b").capitalize(),
     #     state[label],
     #     key="color_picker" + label,
     # )
+    # st.write(c)
+    # st.text_input("c", state[label], key="test" + label)
+    column.markdown(
+        f"<small>{label.rstrip('Color').replace('B', ' b').capitalize()}</small>",
+        unsafe_allow_html=True,
+    )
+    img = Image.new("RGB", (100, 50), state[label])
+    img = ImageOps.expand(img, border=1, fill="black")
+    column.image(img, width=150)
+    # TODO: Do this with st.checkbox, but doesn't return the proper value with current wheel.
+    lock_value = column.radio("", ["Locked", "Unlocked"], index=1, key="lock-" + label)
+    locked.append(lock_value == "Locked")
+    # TODO: Show colorpicker above instead of images.
 
 
 def apply_theme_from_session_state():
@@ -139,6 +147,7 @@ if st.button("🔄 Generate new theme"):
     st.info(random.choice(wait_texts))
     generate_new_theme()
 
+# TODO: Try to do everything after this call, because this triggers a re-run.
 apply_theme_from_session_state()
 
 
