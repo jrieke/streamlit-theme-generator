@@ -1,4 +1,4 @@
-# streamlit-theme-generator 👩‍🎨️
+# Streamlit Theme Generator 👩‍🎨️
 
 [![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://share.streamlit.io/jrieke/streamlit-theme-generator/main)
 
