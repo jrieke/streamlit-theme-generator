@@ -61,10 +61,10 @@ state = st.get_state(
 
 
 def apply_theme_from_session_state():
-    print(tab, " - config primary:", st.config.get_option("theme.primaryColor"))
-    print(tab, " - state primary: ", state.primaryColor)
+    # print(tab, " - config primary:", st.config.get_option("theme.primaryColor"))
+    # print(tab, " - state primary: ", state.primaryColor)
     if st.config.get_option("theme.primaryColor") != state.primaryColor:
-        print(tab, " - DIFFERENCE, APPLYING THEME NOW")
+        # print(tab, " - DIFFERENCE, APPLYING THEME NOW")
         st.config.set_option("theme.primaryColor", state.primaryColor)
         st.config.set_option("theme.backgroundColor", state.backgroundColor)
         st.config.set_option(
@@ -73,7 +73,7 @@ def apply_theme_from_session_state():
         st.config.set_option("theme.textColor", state.textColor)
         st.experimental_rerun()
     else:
-        print(tab, " - no difference, did not apply theme")
+        # print(tab, " - no difference, did not apply theme")
         pass
 
 
@@ -115,12 +115,12 @@ def apply_random_theme():
 
 
 if st.button("New colors! 🎈"):
-    print()
-    print(tab, " - button pressed :)")
+    # print()
+    # print(tab, " - button pressed :)")
     apply_random_theme()
     st.info("Applying colors... (hit *Rerun* if asked)")
 else:
-    print()
+    # print()
     apply_theme_from_session_state()
 
 
