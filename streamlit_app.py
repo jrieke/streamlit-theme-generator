@@ -17,9 +17,8 @@ st.image(
 # Streamlit Theme Generator
 
 
-Click below to generate a new color theme, based on color palettes from 
-[colormind.io](http://colormind.io/). Note: This may not work properly if multiple 
-people use the app at the same time.
+Click below to apply a random color palette from [colormind.io](http://colormind.io/) 
+to this app! 🎨 
 """
 
 
@@ -124,6 +123,12 @@ else:
     apply_theme_from_session_state()
 
 
+# st.markdown(
+#     "<sub>Note: May not work properly if a lot of people use this app at the same time!</sub>",
+#     unsafe_allow_html=True,
+# )
+
+
 st.write("---")
 st.write("Here are your current colors:")
 columns = st.beta_columns(4)
@@ -135,7 +140,7 @@ for column, label in zip(columns, labels):
     # image = np.zeros((150, 300, 3), np.uint8)
     # image[3:-3, 3:-3] = color
     column.image(img, width=150)
-    column.write(label)
+    column.markdown(f"<sup>{label}</sup>", unsafe_allow_html=True)
     # ax.imshow(image)
     # ax.axis("off")
 
@@ -146,8 +151,9 @@ config = CONFIG_TEMPLATE.format(
     state.textColor,
 )
 st.write("")
-st.write("And this is the config for them (put in `.streamlit/config.toml`):")
+st.write("To use them in your app, just add this code to `.streamlit/config.toml`:")
 st.code(config)
+st.write("---")
 
 
 # Draw some dummy content in main page and sidebar.
