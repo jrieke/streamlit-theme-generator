@@ -52,6 +52,24 @@ state = st.get_state(
     first_time=True,
 )
 
+locked = []
+
+st.write("Current theme:")
+columns = st.beta_columns(4)
+labels = ["backgroundColor", "secondaryBackgroundColor", "primaryColor", "textColor"]
+for column, label in zip(columns, labels):
+    img = Image.new("RGB", (100, 50), state[label])
+    img = ImageOps.expand(img, border=1, fill="black")
+    # image = np.zeros((150, 300, 3), np.uint8)
+    # image[3:-3, 3:-3] = color
+    column.image(img, width=150)
+    column.markdown(f"<sup>{label}<br>{state[label]}</sup>", unsafe_allow_html=True)
+    # TODO: Do this with st.checkbox, but doesn't return the proper value with current wheel.
+    lock_value = column.radio("", ["Locked", "Unlocked"], index=1, key="lock-" + label)
+    locked.append(lock_value == "Locked")
+    # ax.imshow(image)
+    # ax.axis("off")
+st.write(locked)
 
 # tab = st.text_input("Which tab is this?")
 # st.write(tab)
@@ -120,7 +138,7 @@ def apply_random_theme():
 
 theme_type = st.radio("Which kind?", ["Light", "Dark"])
 
-if st.button("New colors! 🎈"):
+if st.button("🔄 New colors! 🎈"):
     # print()
     # print(tab, " - button pressed :)")
     if state.first_time:
@@ -140,19 +158,7 @@ else:
 
 
 st.write("---")
-st.write("Here are your current colors:")
-columns = st.beta_columns(4)
-labels = ["backgroundColor", "secondaryBackgroundColor", "primaryColor", "textColor"]
-for column, label in zip(columns, labels):
-    webhexcolor = "#4878A8"
-    img = Image.new("RGB", (100, 50), state[label])
-    img = ImageOps.expand(img, border=1, fill="black")
-    # image = np.zeros((150, 300, 3), np.uint8)
-    # image[3:-3, 3:-3] = color
-    column.image(img, width=150)
-    column.markdown(f"<sup>{label}</sup>", unsafe_allow_html=True)
-    # ax.imshow(image)
-    # ax.axis("off")
+
 
 config = CONFIG_TEMPLATE.format(
     state.primaryColor,
