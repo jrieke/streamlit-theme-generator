@@ -28,6 +28,10 @@ def rgb2hex(r, g, b):
     return "#{0:02x}{1:02x}{2:02x}".format(clamp(r), clamp(g), clamp(b))
 
 
+def hex2rgb(h):
+    return tuple(int(h.lstrip("#")[i : i + 2], 16) for i in (0, 2, 4))
+
+
 CONFIG_TEMPLATE = """
 [theme]
 primaryColor = "{}"
@@ -49,6 +53,7 @@ state = st.get_state(
     backgroundColor="#FFFFFF",
     secondaryBackgroundColor="#f0f2f6",
     textColor="#262730",
+    is_dark_theme=False,
     first_time=True,
 )
 
@@ -69,7 +74,7 @@ for column, label in zip(columns, labels):
     locked.append(lock_value == "Locked")
     # ax.imshow(image)
     # ax.axis("off")
-st.write(locked)
+# st.write(locked)
 
 # tab = st.text_input("Which tab is this?")
 # st.write(tab)
@@ -94,22 +99,49 @@ def apply_theme_from_session_state():
 
 
 def apply_random_theme():
-    res = requests.get("http://colormind.io/api/", json={"model": "ui"})
+    if any(locked):
+        input_list = ["N", "N", "N", "N", "N"]
+        # TODO: Refactor this.
+        if locked[0]:
+            if state.is_dark_theme:
+                input_list[4] = hex2rgb(state.backgroundColor)
+            else:
+                input_list[0] = hex2rgb(state.backgroundColor)
+        if locked[1]:
+            if state.is_dark_theme:
+                input_list[3] = hex2rgb(state.secondaryBackgroundColor)
+            else:
+                input_list[1] = hex2rgb(state.secondaryBackgroundColor)
+        if locked[2]:
+            input_list[2] = hex2rgb(state.primaryColor)
+        if locked[3]:
+            if state.is_dark_theme:
+                input_list[0] = hex2rgb(state.textColor)
+            else:
+                input_list[4] = hex2rgb(state.textColor)
+        print(input_list)
+        res = requests.get("http://colormind.io/api/", json={"input": input_list, "model": "ui"})
+        # "input":
+    else:
+        res = requests.get("http://colormind.io/api/", json={"model": "ui"})
 
     rgb_colors = res.json()["result"]
     hex_colors = [rgb2hex(*rgb) for rgb in res.json()["result"]]
     # st.global_state = {"rgb_colors": rgb_colors, "hex_colors": hex_colors}
 
+    state.rgb_palette = rgb_colors
     if theme_type == "Light":
         state.primaryColor = hex_colors[2]
         state.backgroundColor = hex_colors[0]
         state.secondaryBackgroundColor = hex_colors[1]
         state.textColor = hex_colors[4]
+        state.is_dark_theme = False
     else:
         state.primaryColor = hex_colors[2]
         state.backgroundColor = hex_colors[4]
         state.secondaryBackgroundColor = hex_colors[3]
         state.textColor = hex_colors[0]
+        state.is_dark_theme = True
 
     apply_theme_from_session_state()
     # st.experimental_rerun()
