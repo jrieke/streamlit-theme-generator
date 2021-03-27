@@ -26,13 +26,10 @@ find one you like and copy it to your own Streamlit app!
 
 <br>
 
----
-
-<br>
-
 ## Development
 
-**These steps are only required if you want to work on the app.**
+**These steps are only required to work on the app.**
+
 Install with:
 
 ```bash
