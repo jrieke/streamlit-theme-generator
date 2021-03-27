@@ -5,10 +5,10 @@
 **Generate beautiful color themes for Streamlit, powered by [colormind.io](http://colormind.io/bootstrap/).**
 
 [Theming in Streamlit](https://blog.streamlit.io/introducing-theming/) is awesome but
-it can be hard to find colors that match. This app generates beautiful color
+it can be hard to find colors that match. This Streamlit app generates beautiful color
 palettes through [colormind.io](http://colormind.io/bootstrap/)
-and applies them live to its own Streamlit theme. Just generate themes until you
-find one you like and copy it to your own Streamlit app!
+and applies them live to its own theme. Just generate new themes until you
+find one you like and copy it to your own app!
 
 <br>
 
