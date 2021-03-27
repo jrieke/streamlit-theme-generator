@@ -175,9 +175,12 @@ apply_theme_from_session_state()
 
 # st.write("---")
 ""
-st.write(
-    "To use this theme in your app, just copy the following code to *.streamlit/config.toml*:"
-)
+
+"""
+To use this theme in your app, just create a file *.streamlit/config.toml* in your app's 
+root directory and add the following code:
+"""
+
 config = utils.CONFIG_TEMPLATE.format(
     state.primaryColor,
     state.backgroundColor,
