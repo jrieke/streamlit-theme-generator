@@ -26,19 +26,22 @@ state = st.get_state(
     first_time=True,
 )
 
-
 # Show header.
-st.image(
+header_img = st.empty()
+header_img.image(
     "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/240/apple/271/woman-artist_1f469-200d-1f3a8.png",
     width=100,
 )
 
-"""
-# Streamlit Theme Generator
+header_text = st.empty()
+header_text.write(
+    """
+    # Streamlit Theme Generator
 
-Generate beautiful color themes for Streamlit, powered by [colormind.io](http://colormind.io/bootstrap/). 
-Scroll down to see the theme in action 🎈
-"""
+    Generate beautiful color themes for Streamlit, powered by [colormind.io](http://colormind.io/bootstrap/).
+    Scroll down to see the theme in action 🎈
+    """
+)
 
 ""
 
@@ -54,6 +57,7 @@ theme_type = col2.radio("", ["Light theme", "Dark theme"])
 
 "---"
 
+quote = st.beta_container()
 
 # Show current theme colors.
 locked = []
@@ -188,6 +192,46 @@ config = utils.CONFIG_TEMPLATE.format(
     state.textColor,
 )
 st.code(config)
+
+mode = st.radio("App mode", ["Normal", "Cute 🐿️"], key="mode")
+if mode == "Cute 🐿️":
+    header_img.image(
+        "https://images0.gerstaecker.de/out/pictures/generated/1500_1500/pboxx-pixelboxx-47382/BOB+ROSS%C2%AE+Soft-%C3%96lfarben+%E2%80%93+Tiere.jpg",
+        width=100,
+    )
+    header_text.write(
+        """
+        # The Joy of Streamlitting
+
+        Welcome back,
+
+        today we want to bring some color to this little Streamlit app. Everything you need 
+        is your mouse to hit the button below. Let's start, and whatever you do, always remember:
+        There are no mistakes – only happy little accidents! 🐿️
+
+        And with that, I wish you happy streamlitting, and god bless my friend.
+        """
+    )
+    st.write("And now scroll up ☝️")
+
+    bob_quotes = [
+        '🌈 *"If we all painted the same way, what a boring world it would be."*',
+        '☀️ *"...that may be the true joy of painting, when you share it with other people. I really believe that\'s the true joy."*',
+        '🌲 *"Friends are the most important commodity in the world. Even a tree needs a friend."*',
+        '🌚 *"We put some dark in, only so our light will show. You have to have dark in order to show the light."*',
+        '👩‍🎨️ *"There\'s an artist hidden at the bottom of every single one of us."*',
+        '☁️ *"Let\'s make some nice little clouds that just float around and have fun all day."*',
+        '🖌️ *"Every day is a good day when you paint."*',
+        '🦄 *"However you think it should be, that\'s exactly how it should be."*',
+        '🕊️ *"I aspire to create tranquility, a peaceful atmosphere to take people away form their everyday problems and frustrations."*',
+        '👣 *"You\'ll never believe what you can do until you get in there and try it."*',
+    ]
+    block_methods = [st.error, st.warning, st.info, st.success]
+    with quote:
+        random.choice(block_methods)(random.choice(bob_quotes))
+        st.write("")
+
+
 st.write("---")
 
 
