@@ -5,9 +5,9 @@
 **Generate beautiful color themes for Streamlit, powered by [colormind.io](http://colormind.io/bootstrap/).**
 
 [Theming in Streamlit](https://blog.streamlit.io/introducing-theming/) is awesome but
-it's often hard to pick colors that match. This app generates beautiful color
+it's hard to find colors that match. This app generates beautiful color
 palettes through [colormind.io](http://colormind.io/bootstrap/)
-and applies them live to its Streamlit theme. Just generate themes until you
+and applies them live to its own Streamlit theme. Just generate themes until you
 find one you like and copy it to your own Streamlit app!
 
 <br>
@@ -26,25 +26,22 @@ find one you like and copy it to your own Streamlit app!
 
 <br>
 
-_For updates [follow me on Twitter](https://twitter.com/jrieke) ☺️_
-
-<br>
-
 ---
 
 <br>
 
-**Note: The steps below are only required if you want to work on the app. If you just want to use it, go [here](https://share.streamlit.io/jrieke/streamlit-theme-generator/main).**
+## Development
 
-## Installation
+**These steps are only required if you want to work on the app.**
+Install with:
 
 ```bash
 git clone https://github.com/jrieke/streamlit-theme-generator.git
 cd streamlit-theme-generator
-pipenv install
+pipenv install  # or: pip install -r requirements.txt
 ```
 
-## Running locally
+And then start the Streamlit server with:
 
 ```bash
 streamlit run streamlit_app.py
