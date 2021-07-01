@@ -17,14 +17,13 @@ utils.local_css("local_styles.css")
 
 # Init state. This is only run whenever a new session starts (i.e. each time a new
 # browser tab is opened).
-state = st.get_state(
-    primaryColor="#f63366",
-    backgroundColor="#FFFFFF",
-    secondaryBackgroundColor="#f0f2f6",
-    textColor="#262730",
-    is_dark_theme=False,
-    first_time=True,
-)
+if not st.session_state:
+    st.session_state.primaryColor = "#f63366"
+    st.session_state.backgroundColor = "#FFFFFF"
+    st.session_state.secondaryBackgroundColor = "#f0f2f6"
+    st.session_state.textColor = "#262730"
+    st.session_state.is_dark_theme = False
+    st.session_state.first_time = True
 
 # Show header.
 header_img = st.empty()
@@ -45,7 +44,7 @@ header_text.write(
 
 ""
 
-col1, col2 = st.beta_columns([0.3, 0.7])
+col1, col2 = st.beta_columns([0.35, 0.65])
 new_theme_clicked = col1.button("🔄 Generate new theme")
 theme_type = col2.radio("", ["Light theme", "Dark theme"])
 # spinner = st.empty()
@@ -71,7 +70,7 @@ for column, label in zip(columns, labels):
     # )
     # st.write(c)
     # st.text_input("c", state[label], key="test" + label)
-    img = Image.new("RGB", (100, 50), state[label])
+    img = Image.new("RGB", (100, 50), st.session_state[label])
     img = ImageOps.expand(img, border=1, fill="black")
     column.image(img, width=150)
     column.markdown(
@@ -88,13 +87,13 @@ def apply_theme_from_session_state():
     """Retrieve theme from session state and apply it to streamlit config."""
     # Only apply if theme in state differs from the current config. This is important
     # to not trigger rerun repeatedly.
-    if st.config.get_option("theme.primaryColor") != state.primaryColor:
-        st.config.set_option("theme.primaryColor", state.primaryColor)
-        st.config.set_option("theme.backgroundColor", state.backgroundColor)
+    if st.config.get_option("theme.primaryColor") != st.session_state.primaryColor:
+        st.config.set_option("theme.primaryColor", st.session_state.primaryColor)
+        st.config.set_option("theme.backgroundColor", st.session_state.backgroundColor)
         st.config.set_option(
-            "theme.secondaryBackgroundColor", state.secondaryBackgroundColor
+            "theme.secondaryBackgroundColor", st.session_state.secondaryBackgroundColor
         )
-        st.config.set_option("theme.textColor", state.textColor)
+        st.config.set_option("theme.textColor", st.session_state.textColor)
 
         # Trigger manual rerun (required to actually apply the theme to the app).
         st.experimental_rerun()
@@ -109,22 +108,22 @@ def generate_new_theme():
         input_list = ["N", "N", "N", "N", "N"]
         # TODO: Refactor this.
         if locked[0]:
-            if state.is_dark_theme:
-                input_list[4] = utils.hex2rgb(state.backgroundColor)
+            if st.session_state.is_dark_theme:
+                input_list[4] = utils.hex2rgb(st.session_state.backgroundColor)
             else:
-                input_list[0] = utils.hex2rgb(state.backgroundColor)
+                input_list[0] = utils.hex2rgb(st.session_state.backgroundColor)
         if locked[1]:
-            if state.is_dark_theme:
-                input_list[3] = utils.hex2rgb(state.secondaryBackgroundColor)
+            if st.session_state.is_dark_theme:
+                input_list[3] = utils.hex2rgb(st.session_state.secondaryBackgroundColor)
             else:
-                input_list[1] = utils.hex2rgb(state.secondaryBackgroundColor)
+                input_list[1] = utils.hex2rgb(st.session_state.secondaryBackgroundColor)
         if locked[2]:
-            input_list[2] = utils.hex2rgb(state.primaryColor)
+            input_list[2] = utils.hex2rgb(st.session_state.primaryColor)
         if locked[3]:
-            if state.is_dark_theme:
-                input_list[0] = utils.hex2rgb(state.textColor)
+            if st.session_state.is_dark_theme:
+                input_list[0] = utils.hex2rgb(st.session_state.textColor)
             else:
-                input_list[4] = utils.hex2rgb(state.textColor)
+                input_list[4] = utils.hex2rgb(st.session_state.textColor)
         res = requests.get(
             "http://colormind.io/api/", json={"input": input_list, "model": "ui"}
         )
@@ -141,27 +140,27 @@ def generate_new_theme():
     # have different themes. If we would apply the theme directly to `st.config`,
     # every user would see the same theme!
     if theme_type == "Light theme":
-        state.primaryColor = hex_colors[2]
-        state.backgroundColor = hex_colors[0]
-        state.secondaryBackgroundColor = hex_colors[1]
-        state.textColor = hex_colors[4]
-        state.is_dark_theme = False
+        st.session_state.primaryColor = hex_colors[2]
+        st.session_state.backgroundColor = hex_colors[0]
+        st.session_state.secondaryBackgroundColor = hex_colors[1]
+        st.session_state.textColor = hex_colors[4]
+        st.session_state.is_dark_theme = False
     else:
-        state.primaryColor = hex_colors[2]
-        state.backgroundColor = hex_colors[4]
-        state.secondaryBackgroundColor = hex_colors[3]
-        state.textColor = hex_colors[0]
-        state.is_dark_theme = True
+        st.session_state.primaryColor = hex_colors[2]
+        st.session_state.backgroundColor = hex_colors[4]
+        st.session_state.secondaryBackgroundColor = hex_colors[3]
+        st.session_state.textColor = hex_colors[0]
+        st.session_state.is_dark_theme = True
 
 
 ""
 
 
 if new_theme_clicked:
-    if state.first_time:
+    if st.session_state.first_time:
         # Show some 🎈 🎈 the first time the user creates a new theme ;)
         st.balloons()
-        state.first_time = False
+        st.session_state.first_time = False
     wait_texts = [
         "🎨 Mixing colors...",
         "🌈 Collecting rainbows...",
@@ -186,10 +185,10 @@ root directory and add the following code:
 """
 
 config = utils.CONFIG_TEMPLATE.format(
-    state.primaryColor,
-    state.backgroundColor,
-    state.secondaryBackgroundColor,
-    state.textColor,
+    st.session_state.primaryColor,
+    st.session_state.backgroundColor,
+    st.session_state.secondaryBackgroundColor,
+    st.session_state.textColor,
 )
 st.code(config)
 
