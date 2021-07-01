@@ -6,6 +6,8 @@ name = "pypi"
 [packages]
 pillow = "*"
 streamlit = {path = "./streamlit-0.79.0-py2.py3-none-any.whl"}
+colorthief = "*"
+matplotlib = "*"
 
 [dev-packages]
 
